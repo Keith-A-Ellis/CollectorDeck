@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "watchify -e  index.js -o bundle.js"
+    "start": "watchify -e  index.js -o bundle.js",
+    "deploy": "now --prod"
   },
   "keywords": [
     "birds"
