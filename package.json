@@ -1,0 +1,19 @@
+{
+  "name": "collecta-dex",
+  "version": "1.0.0",
+  "description": "An app for Roz",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "watchify -e  index.js -o bundle.js"
+  },
+  "keywords": [
+    "birds"
+  ],
+  "author": "tillie-hakes",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^16.5.0",
+    "watchify": "^3.11.1"
+  }
+}

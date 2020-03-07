@@ -1,0 +1,66 @@
+html,
+body {
+  font-family: 'Sigmar One', cursive;
+}
+
+.card-group{
+  display: inline-flex;
+  flex-wrap: wrap;
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
+.card {
+  width: 23rem;
+  margin: 10px;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+#rarity-box {
+  width: Auto;
+  height: Auto;
+  color: #17202A;
+  font-size: 20px;
+  text-shadow: -0.5px -0.5px 0 #F4F6F7, 0.5px -0.5px 0 #F4F6F7, -0.5px 0.5px 0 #F4F6F7, 0.5px 0.5px 0 #F4F6F7;
+  padding-inline-start: 5px;
+  padding-inline-end: 5px;
+  text-align: center;
+  position: absolute;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  top: 0;
+  right: 0;
+}
+
+.Common-card {
+  background: #808B96;
+}
+
+.Uncommon-card {
+  background: #2ECC71;
+}
+
+.Rare-card {
+  background: #2E86C1;
+}
+
+.card p{
+  margin: 10px;
+  font-family: sans-serif;
+}
+
+.card h2{
+  margin: 10px;
+}
+
+.collected {
+  color: green;
+}
+
+#image1 {
+  width: 100%;
+  height: auto;
+  background-size: contain;
+}
