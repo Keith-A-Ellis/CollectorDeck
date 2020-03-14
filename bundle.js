@@ -72,25 +72,25 @@ module.exports = {
 const Pack = require('./models/Pack');
 const Card = require('./models/Card');
 const Score = require('./models/Score');
-const renderSections = require('./pageContent/sectionView');
-const cardView = require('./pageContent/cardView');
-
-const currentPack = new Pack('birdPack');
+const renderScoreView = require('./pageContent/scoreView');
+const renderSectionView = require('./pageContent/sectionView');
+const renderCardView = require('./pageContent/cardView');
 
 let state = {
     packPoints: 0,
     collectedCards: []
 };
 
+const currentPack = new Pack('birdPack');
 const score = new Score(currentPack.getPackData(), state.collectedCards);
 
 const collectCard = (id) => {
     if (state.collectedCards.includes(id)){
-        cardView.changeCollectedState(id, 'remove');
+        renderCardView.changeCollectedState(id, 'remove');
         state.collectedCards.splice(state.collectedCards.indexOf(id), 1);
     } 
     else {
-        cardView.changeCollectedState(id, 'add');
+        renderCardView.changeCollectedState(id, 'add');
         state.collectedCards.push(id);
     };
 
@@ -104,19 +104,20 @@ const addCardsToSection = () => {
         const cards = currentPack.getCardsForSection(section);
 
         cards.forEach(cardData => {
-            cardView.renderCard(section.sectionID, new Card(cardData), collectCard);
+            renderCardView.renderCard(section.sectionID, new Card(cardData), collectCard);
         });
     });
 };
 
-const renderPack = () => {
-    renderSections(currentPack.getSections());
+const renderPage = () => {
+    renderScoreView(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
+    renderSectionView(currentPack.getSections());
     addCardsToSection();
 };
 
-renderPack();
+renderPage();
 
-},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./pageContent/cardView":6,"./pageContent/sectionView":7}],3:[function(require,module,exports){
+},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./pageContent/cardView":6,"./pageContent/scoreView":7,"./pageContent/sectionView":8}],3:[function(require,module,exports){
 class Card {
     constructor(item) {
         this.id = item.id;
@@ -157,6 +158,16 @@ class Pack {
 
     getCardsForSection(section){
         return section.items;
+    };
+
+    getCardAmount() {
+        let totalCards = 0;
+
+        this.getSections().forEach(section => {
+            totalCards += section.items.length;
+        })
+
+        return totalCards;
     };
 };
 
@@ -230,6 +241,13 @@ module.exports = {renderCard, changeCollectedState};
 
 
 },{}],7:[function(require,module,exports){
+const initialScoreRender = (score, cardAmount, collectedAmount) => {
+    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `<h1>Cards Collected: ${collectedAmount}/${cardAmount}</h1>`);
+    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `<h1>Score: ${score}</h1>`);
+};
+
+module.exports = initialScoreRender;
+},{}],8:[function(require,module,exports){
 const renderSections = (data) => {
   data.forEach(section => {
     document.querySelector('#root').insertAdjacentHTML('beforeEnd', addSection(section.title, section.sectionID));

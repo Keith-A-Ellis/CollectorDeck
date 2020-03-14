@@ -16,6 +16,16 @@ class Pack {
     getCardsForSection(section){
         return section.items;
     };
+
+    getCardAmount() {
+        let totalCards = 0;
+
+        this.getSections().forEach(section => {
+            totalCards += section.items.length;
+        })
+
+        return totalCards;
+    };
 };
 
 module.exports = Pack;
