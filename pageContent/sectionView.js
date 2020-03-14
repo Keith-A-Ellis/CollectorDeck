@@ -7,7 +7,7 @@ const renderSections = (data) => {
 const addSection = (sectionTitle, sectionID) => {
   return `
     <section>
-      <h1>${sectionTitle}</h1>
+      <h1 class="section-title">${sectionTitle}</h1>
       <div  class="card-group"  id='${sectionID}'>
       </div>
     </section>`;
