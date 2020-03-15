@@ -1,13 +1,13 @@
 const Pack = require('./models/Pack');
 const Card = require('./models/Card');
 const Score = require('./models/Score');
-const renderScoreView = require('./pageContent/scoreView');
-const renderSectionView = require('./pageContent/sectionView');
-const renderCardView = require('./pageContent/cardView');
+const renderScoreView = require('./views/scoreView');
+const renderSectionView = require('./views/sectionView');
+const renderCardView = require('./views/cardView');
 
 let state = {
     packPoints: 0,
-    collectedCards: []
+    collectedCards: [],
 };
 
 const currentPack = new Pack('birdPack');
@@ -24,8 +24,7 @@ const collectCard = (id) => {
     };
 
     state.packPoints = score.getScore();
-
-    console.log(state.packPoints);
+    renderScoreView.updatePoints(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
 };
 
 const addCardsToSection = () => {
@@ -39,7 +38,7 @@ const addCardsToSection = () => {
 };
 
 const renderPage = () => {
-    renderScoreView(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
+    renderScoreView.initialScoreRender(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
     renderSectionView(currentPack.getSections());
     addCardsToSection();
 };

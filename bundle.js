@@ -72,13 +72,13 @@ module.exports = {
 const Pack = require('./models/Pack');
 const Card = require('./models/Card');
 const Score = require('./models/Score');
-const renderScoreView = require('./pageContent/scoreView');
-const renderSectionView = require('./pageContent/sectionView');
-const renderCardView = require('./pageContent/cardView');
+const renderScoreView = require('./views/scoreView');
+const renderSectionView = require('./views/sectionView');
+const renderCardView = require('./views/cardView');
 
 let state = {
     packPoints: 0,
-    collectedCards: []
+    collectedCards: [],
 };
 
 const currentPack = new Pack('birdPack');
@@ -95,8 +95,7 @@ const collectCard = (id) => {
     };
 
     state.packPoints = score.getScore();
-
-    console.log(state.packPoints);
+    renderScoreView.updatePoints(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
 };
 
 const addCardsToSection = () => {
@@ -110,14 +109,14 @@ const addCardsToSection = () => {
 };
 
 const renderPage = () => {
-    renderScoreView(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
+    renderScoreView.initialScoreRender(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
     renderSectionView(currentPack.getSections());
     addCardsToSection();
 };
 
 renderPage();
 
-},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./pageContent/cardView":6,"./pageContent/scoreView":7,"./pageContent/sectionView":8}],3:[function(require,module,exports){
+},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./views/cardView":6,"./views/scoreView":7,"./views/sectionView":8}],3:[function(require,module,exports){
 class Card {
     constructor(item) {
         this.id = item.id;
@@ -242,11 +241,18 @@ module.exports = {renderCard, changeCollectedState};
 
 },{}],7:[function(require,module,exports){
 const initialScoreRender = (score, cardAmount, collectedAmount) => {
-    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `<h1>Cards Collected: ${collectedAmount}/${cardAmount}</h1>`);
-    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `<h1>Score: ${score}</h1>`);
+    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `
+    <h1 id='collected-score'>Cards Collected: ${collectedAmount}/${cardAmount}</h1>
+    <h1 id="points-score">Score: ${score}</h1>
+    `);
 };
 
-module.exports = initialScoreRender;
+const updatePoints = (newScore, cardAmount, collectedAmount) => {
+    document.getElementById('collected-score').innerHTML = `Cards Collected: ${collectedAmount}/${cardAmount}`;
+    document.getElementById('points-score').innerHTML = `Score: ${newScore}`;
+}
+
+module.exports = {initialScoreRender,updatePoints};
 },{}],8:[function(require,module,exports){
 const renderSections = (data) => {
   data.forEach(section => {
