@@ -1,8 +1,8 @@
 const getData = require('../data/birdData');
 
 class Pack {
-    constructor(pack){
-        this.pack = pack;
+    constructor(packName){
+        this.pack = packName;
     }
 
     getPackData() {
