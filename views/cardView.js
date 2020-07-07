@@ -5,12 +5,8 @@ const renderCard = (section, cardData, addCardFunction) => {
     });
 };
 
-const changeCollectedState = (id, addOrRemove) => {
-    if(addOrRemove === 'add'){
-        document.getElementById(id).classList.add('collected');
-    } else {
-        document.getElementById(id).classList.remove('collected');
-    }
+const changeCollectedState = (id) => {
+    document.getElementById(id).classList.toggle('collected');
 };
 
 const makeCard = ({id, img, name, description, rarity}) => {

@@ -85,12 +85,12 @@ const currentPack = new Pack('birdPack');
 const score = new Score(currentPack.getPackData(), state.collectedCards);
 
 const collectCard = (id) => {
+    renderCardView.changeCollectedState(id);
+
     if (state.collectedCards.includes(id)){
-        renderCardView.changeCollectedState(id, 'remove');
         state.collectedCards.splice(state.collectedCards.indexOf(id), 1);
     } 
-    else {
-        renderCardView.changeCollectedState(id, 'add');
+    else { 
         state.collectedCards.push(id);
     };
 
@@ -143,8 +143,8 @@ module.exports = Card;
 const getData = require('../data/birdData');
 
 class Pack {
-    constructor(pack){
-        this.pack = pack;
+    constructor(packName){
+        this.pack = packName;
     }
 
     getPackData() {
@@ -215,12 +215,8 @@ const renderCard = (section, cardData, addCardFunction) => {
     });
 };
 
-const changeCollectedState = (id, addOrRemove) => {
-    if(addOrRemove === 'add'){
-        document.getElementById(id).classList.add('collected');
-    } else {
-        document.getElementById(id).classList.remove('collected');
-    }
+const changeCollectedState = (id) => {
+    document.getElementById(id).classList.toggle('collected');
 };
 
 const makeCard = ({id, img, name, description, rarity}) => {

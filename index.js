@@ -14,13 +14,12 @@ const currentPack = new Pack('birdPack');
 const score = new Score(currentPack.getPackData(), state.collectedCards);
 
 const collectCard = (id) => {
-    
+    renderCardView.changeCollectedState(id);
+
     if (state.collectedCards.includes(id)){
-        renderCardView.changeCollectedState(id, 'remove');
         state.collectedCards.splice(state.collectedCards.indexOf(id), 1);
     } 
-    else {
-        renderCardView.changeCollectedState(id, 'add');
+    else { 
         state.collectedCards.push(id);
     };
 
