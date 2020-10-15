@@ -72,31 +72,30 @@ module.exports = {
 const Pack = require('./models/Pack');
 const Card = require('./models/Card');
 const Score = require('./models/Score');
-const renderSections = require('./pageContent/sectionView');
-const cardView = require('./pageContent/cardView');
-
-const currentPack = new Pack('birdPack');
+const renderScoreView = require('./views/scoreView');
+const renderSectionView = require('./views/sectionView');
+const renderCardView = require('./views/cardView');
 
 let state = {
     packPoints: 0,
-    collectedCards: []
+    collectedCards: [],
 };
 
+const currentPack = new Pack('birdPack');
 const score = new Score(currentPack.getPackData(), state.collectedCards);
 
 const collectCard = (id) => {
+    renderCardView.changeCollectedState(id);
+
     if (state.collectedCards.includes(id)){
-        cardView.changeCollectedState(id, 'remove');
         state.collectedCards.splice(state.collectedCards.indexOf(id), 1);
     } 
-    else {
-        cardView.changeCollectedState(id, 'add');
+    else { 
         state.collectedCards.push(id);
     };
 
     state.packPoints = score.getScore();
-
-    console.log(state.packPoints);
+    renderScoreView.updatePoints(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
 };
 
 const addCardsToSection = () => {
@@ -104,19 +103,20 @@ const addCardsToSection = () => {
         const cards = currentPack.getCardsForSection(section);
 
         cards.forEach(cardData => {
-            cardView.renderCard(section.sectionID, new Card(cardData), collectCard);
+            renderCardView.renderCard(section.sectionID, new Card(cardData), collectCard);
         });
     });
 };
 
-const renderPack = () => {
-    renderSections(currentPack.getSections());
+const renderPage = () => {
+    renderScoreView.initialScoreRender(state.packPoints, currentPack.getCardAmount(), state.collectedCards.length);
+    renderSectionView(currentPack.getSections());
     addCardsToSection();
 };
 
-renderPack();
+renderPage();
 
-},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./pageContent/cardView":6,"./pageContent/sectionView":7}],3:[function(require,module,exports){
+},{"./models/Card":3,"./models/Pack":4,"./models/Score":5,"./views/cardView":6,"./views/scoreView":7,"./views/sectionView":8}],3:[function(require,module,exports){
 class Card {
     constructor(item) {
         this.id = item.id;
@@ -143,8 +143,8 @@ module.exports = Card;
 const getData = require('../data/birdData');
 
 class Pack {
-    constructor(pack){
-        this.pack = pack;
+    constructor(packName){
+        this.pack = packName;
     }
 
     getPackData() {
@@ -157,6 +157,16 @@ class Pack {
 
     getCardsForSection(section){
         return section.items;
+    };
+
+    getCardAmount() {
+        let totalCards = 0;
+
+        this.getSections().forEach(section => {
+            totalCards += section.items.length;
+        })
+
+        return totalCards;
     };
 };
 
@@ -205,12 +215,8 @@ const renderCard = (section, cardData, addCardFunction) => {
     });
 };
 
-const changeCollectedState = (id, addOrRemove) => {
-    if(addOrRemove === 'add'){
-        document.getElementById(id).classList.add('collected');
-    } else {
-        document.getElementById(id).classList.remove('collected');
-    }
+const changeCollectedState = (id) => {
+    document.getElementById(id).classList.toggle('collected');
 };
 
 const makeCard = ({id, img, name, description, rarity}) => {
@@ -230,6 +236,20 @@ module.exports = {renderCard, changeCollectedState};
 
 
 },{}],7:[function(require,module,exports){
+const initialScoreRender = (score, cardAmount, collectedAmount) => {
+    document.querySelector('#root').insertAdjacentHTML('beforeEnd', `
+    <h1 id='collected-score'>Cards Collected: ${collectedAmount}/${cardAmount}</h1>
+    <h1 id="points-score">Score: ${score}</h1>
+    `);
+};
+
+const updatePoints = (newScore, cardAmount, collectedAmount) => {
+    document.getElementById('collected-score').innerHTML = `Cards Collected: ${collectedAmount}/${cardAmount}`;
+    document.getElementById('points-score').innerHTML = `Score: ${newScore}`;
+}
+
+module.exports = {initialScoreRender,updatePoints};
+},{}],8:[function(require,module,exports){
 const renderSections = (data) => {
   data.forEach(section => {
     document.querySelector('#root').insertAdjacentHTML('beforeEnd', addSection(section.title, section.sectionID));
