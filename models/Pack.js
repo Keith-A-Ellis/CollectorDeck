@@ -1,8 +1,8 @@
 const getData = require('../data/birdData');
 
 class Pack {
-    constructor(pack){
-        this.pack = pack;
+    constructor(packName){
+        this.pack = packName;
     }
 
     getPackData() {
@@ -15,6 +15,16 @@ class Pack {
 
     getCardsForSection(section){
         return section.items;
+    };
+
+    getCardAmount() {
+        let totalCards = 0;
+
+        this.getSections().forEach(section => {
+            totalCards += section.items.length;
+        })
+
+        return totalCards;
     };
 };
 
